@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CratePusher.Gameplay.Levels;
+using CratePusher.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,12 +9,15 @@ namespace CratePusher
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class CratePusher : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private LevelRenderer levelRenderer;
+        private LevelCollection levelCollection;
+        private int levelNumber = 0;
 
-        public Game1()
+        public CratePusher()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -26,7 +31,10 @@ namespace CratePusher
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+//            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+//            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+//            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -40,7 +48,13 @@ namespace CratePusher
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            var tileSheetTexture = Content.Load<Texture2D>("tilesheet");
+            var tileSheet = new TileSheet(tileSheetTexture);
+            levelRenderer = new LevelRenderer(graphics, tileSheet);
+            using (var importer = new LevelImporter("Content/levels.txt"))
+            {
+                levelCollection = importer.LoadLevels();
+            }
         }
 
         /// <summary>
@@ -49,7 +63,6 @@ namespace CratePusher
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
         /// <summary>
@@ -62,7 +75,17 @@ namespace CratePusher
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                levelNumber = levelNumber <= 0 ? 0 : levelNumber - 1;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                levelNumber = levelNumber >= levelCollection.Levels.Count - 1
+                    ? levelCollection.Levels.Count - 1
+                    : levelNumber + 1;
+            }
 
             base.Update(gameTime);
         }
@@ -73,9 +96,10 @@ namespace CratePusher
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
+            levelRenderer.Render(levelCollection.Levels[levelNumber], spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
