@@ -44,6 +44,11 @@ namespace CratePusher.Graphics
                 for (int x = 0; x < level.Width; ++x)
                 {
                     var location = new Point(x * targetTileSize, y * targetTileSize) + offset;
+                    if (level.PaintFloor[y, x])
+                    {
+                        tileSheet.DrawTile(spriteBatch, TileType.GrayFloor, location, targetTileSize);
+                    }
+
                     switch (level.Fields[y, x])
                     {
                         case FieldType.Player:

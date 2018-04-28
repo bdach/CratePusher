@@ -31,9 +31,8 @@ namespace CratePusher
         /// </summary>
         protected override void Initialize()
         {
-//            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-//            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-//            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.ApplyChanges();
 
             base.Initialize();
