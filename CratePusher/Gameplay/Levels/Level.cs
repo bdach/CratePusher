@@ -55,7 +55,7 @@ namespace CratePusher.Gameplay.Levels
             var positionStack = new Stack<Point>();
             var neighbors = new List<(int, int)>
             {
-                (-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)
+                (-1, 0), (1, 0), (0, -1), (0, 1)
             };
             positionStack.Push(playerPosition);
             while (positionStack.Count > 0)
@@ -73,7 +73,7 @@ namespace CratePusher.Gameplay.Levels
                     var newX = x + dx;
                     var newY = y + dy;
                     var point = new Point(newX, newY);
-                    if (newX >= 0 && newX < Width && newY >= 0 && newY < Height)
+                    if (newX >= 0 && newX < Width && newY >= 0 && newY < Height && !PaintFloor[newY, newX])
                     {
                         positionStack.Push(point);
                     }
