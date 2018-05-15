@@ -1,5 +1,6 @@
 ﻿using CratePusher.Gameplay.Levels;
 using CratePusher.Graphics;
+using CratePusher.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,11 +16,13 @@ namespace CratePusher
         private SpriteBatch spriteBatch;
         private LevelRenderer levelRenderer;
         private LevelCollection levelCollection;
+        private StateManager stateManager;
         private int levelNumber = 0;
 
         public CratePusher()
         {
             graphics = new GraphicsDeviceManager(this);
+            stateManager = new StateManager();;
             Content.RootDirectory = "Content";
         }
 
@@ -74,18 +77,9 @@ namespace CratePusher
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                levelNumber = levelNumber <= 0 ? 0 : levelNumber - 1;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                levelNumber = levelNumber >= levelCollection.Levels.Count - 1
-                    ? levelCollection.Levels.Count - 1
-                    : levelNumber + 1;
-            }
-
+            var action = stateManager.Advance(gameTime.ElapsedGameTime);
+            levelCollection.Levels[levelNumber].PerformAction(action);
+            
             base.Update(gameTime);
         }
 

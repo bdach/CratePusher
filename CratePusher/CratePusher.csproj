@@ -50,6 +50,13 @@
     <Compile Include="Graphics\LevelRenderer.cs" />
     <Compile Include="Graphics\TileSheet.cs" />
     <Compile Include="Graphics\TileType.cs" />
+    <Compile Include="Input\BlockedState.cs" />
+    <Compile Include="Input\ButtonDownState.cs" />
+    <Compile Include="Input\IdleState.cs" />
+    <Compile Include="Input\InputAction.cs" />
+    <Compile Include="Input\IState.cs" />
+    <Compile Include="Input\KeyBindings.cs" />
+    <Compile Include="Input\StateManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

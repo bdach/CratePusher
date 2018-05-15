@@ -51,9 +51,6 @@ namespace CratePusher.Graphics
 
                     switch (level.Fields[y, x])
                     {
-                        case FieldType.Player:
-                            tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, location, targetTileSize);
-                            break;
                         case FieldType.Slot:
                             tileSheet.DrawTile(spriteBatch, TileType.TargetField, location, targetTileSize);
                             break;
@@ -64,8 +61,14 @@ namespace CratePusher.Graphics
                             tileSheet.DrawTile(spriteBatch, TileType.RedWall, location, targetTileSize);
                             break;
                     }
+
                 }
             }
+            var playerLocation = level.PlayerPosition;
+            playerLocation.X *= targetTileSize;
+            playerLocation.Y *= targetTileSize;
+            playerLocation += offset;
+            tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
         }
 
         private int GetTileSize(int fullScaleWidth, int fullScaleHeight)

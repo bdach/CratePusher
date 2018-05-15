@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CratePusher.Input;
 using Microsoft.Xna.Framework;
 
 namespace CratePusher.Gameplay.Levels
 {
     public class Level
     {
+        private Point playerPosition;
+
         public FieldType[,] Fields { get; }
         public bool[,] PaintFloor { get; }
+        public Point PlayerPosition => playerPosition;
         public int Width => Fields.GetLength(1);
         public int Height => Fields.GetLength(0);
 
@@ -18,7 +22,7 @@ namespace CratePusher.Gameplay.Levels
             var width = rows.Select(r => r.Length).Max();
             Fields = new FieldType[height, width];
             PaintFloor = new bool[height, width];
-            Point? playerPosition = null;
+            Point? initialPosition = null;
             for (int y = 0; y < height; ++y)
             {
                 var line = rows[y];
@@ -37,27 +41,46 @@ namespace CratePusher.Gameplay.Levels
                             Fields[y, x] = FieldType.Slot;
                             break;
                         case '@':
-                            Fields[y, x] = FieldType.Player;
-                            playerPosition = new Point(x, y);
+                            initialPosition = new Point(x, y);
                             break;
                     }
                 }
             }
-            if (!playerPosition.HasValue)
+            if (!initialPosition.HasValue)
             {
                 throw new ArgumentException("No player in level");
             }
-            FloodFillFloor(playerPosition.Value);
+            playerPosition = initialPosition.Value;
+            FloodFillFloor(initialPosition.Value);
         }
 
-        private void FloodFillFloor(Point playerPosition)
+        public void PerformAction(InputAction action)
+        {
+            switch (action)
+            {
+                case InputAction.MoveLeft:
+                    playerPosition.X = Math.Max(0, playerPosition.X - 1);
+                    break;
+                case InputAction.MoveRight:
+                    playerPosition.X = Math.Min(Width - 1, playerPosition.X + 1);
+                    break;
+                case InputAction.MoveUp:
+                    playerPosition.Y = Math.Max(0, playerPosition.Y - 1);
+                    break;
+                case InputAction.MoveDown:
+                    playerPosition.Y = Math.Min(Height - 1, playerPosition.Y + 1);
+                    break;
+            }
+        }
+
+        private void FloodFillFloor(Point initialPosition)
         {
             var positionStack = new Stack<Point>();
             var neighbors = new List<(int, int)>
             {
                 (-1, 0), (1, 0), (0, -1), (0, 1)
             };
-            positionStack.Push(playerPosition);
+            positionStack.Push(initialPosition);
             while (positionStack.Count > 0)
             {
                 var nextPoint = positionStack.Pop();
