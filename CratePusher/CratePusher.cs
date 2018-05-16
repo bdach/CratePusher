@@ -1,4 +1,5 @@
 ﻿using CratePusher.Gameplay.Levels;
+using CratePusher.Gameplay.Logic;
 using CratePusher.Graphics;
 using CratePusher.Input;
 using Microsoft.Xna.Framework;
@@ -17,12 +18,14 @@ namespace CratePusher
         private LevelRenderer levelRenderer;
         private LevelCollection levelCollection;
         private StateManager stateManager;
+        private CommandRunner commandRunner;
         private int levelNumber = 0;
 
         public CratePusher()
         {
             graphics = new GraphicsDeviceManager(this);
             stateManager = new StateManager();;
+            commandRunner = new CommandRunner();
             Content.RootDirectory = "Content";
         }
 
@@ -78,7 +81,7 @@ namespace CratePusher
                 Exit();
 
             var action = stateManager.Advance(gameTime.ElapsedGameTime);
-            levelCollection.Levels[levelNumber].PerformAction(action);
+            commandRunner.RunCommandsForAction(action, levelCollection.Levels[levelNumber]);
             
             base.Update(gameTime);
         }

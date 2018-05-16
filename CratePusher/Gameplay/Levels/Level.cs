@@ -8,11 +8,9 @@ namespace CratePusher.Gameplay.Levels
 {
     public class Level
     {
-        private Point playerPosition;
-
         public FieldType[,] Fields { get; }
         public bool[,] PaintFloor { get; }
-        public Point PlayerPosition => playerPosition;
+        public Point PlayerPosition { get; set; }
         public int Width => Fields.GetLength(1);
         public int Height => Fields.GetLength(0);
 
@@ -50,27 +48,14 @@ namespace CratePusher.Gameplay.Levels
             {
                 throw new ArgumentException("No player in level");
             }
-            playerPosition = initialPosition.Value;
+            PlayerPosition = initialPosition.Value;
             FloodFillFloor(initialPosition.Value);
         }
 
-        public void PerformAction(InputAction action)
+        public bool InBounds(Point point)
         {
-            switch (action)
-            {
-                case InputAction.MoveLeft:
-                    playerPosition.X = Math.Max(0, playerPosition.X - 1);
-                    break;
-                case InputAction.MoveRight:
-                    playerPosition.X = Math.Min(Width - 1, playerPosition.X + 1);
-                    break;
-                case InputAction.MoveUp:
-                    playerPosition.Y = Math.Max(0, playerPosition.Y - 1);
-                    break;
-                case InputAction.MoveDown:
-                    playerPosition.Y = Math.Min(Height - 1, playerPosition.Y + 1);
-                    break;
-            }
+            return point.X >= 0 && point.X < Width &&
+                   point.Y >= 0 && point.Y < Height;
         }
 
         private void FloodFillFloor(Point initialPosition)

@@ -47,6 +47,10 @@
     <Compile Include="Gameplay\Levels\FieldType.cs" />
     <Compile Include="Gameplay\Levels\Level.cs" />
     <Compile Include="Gameplay\Levels\LevelCollection.cs" />
+    <Compile Include="Gameplay\Logic\CommandRunner.cs" />
+    <Compile Include="Gameplay\Logic\ICommand.cs" />
+    <Compile Include="Gameplay\Logic\MoveCrateCommand.cs" />
+    <Compile Include="Gameplay\Logic\MovePlayerCommand.cs" />
     <Compile Include="Graphics\LevelRenderer.cs" />
     <Compile Include="Graphics\TileSheet.cs" />
     <Compile Include="Graphics\TileType.cs" />
