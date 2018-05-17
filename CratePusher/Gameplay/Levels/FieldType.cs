@@ -4,8 +4,6 @@
     {
         Nothing,
         Wall,
-        Stone,
-        Slot,
-        Player
+        Slot
     }
 }

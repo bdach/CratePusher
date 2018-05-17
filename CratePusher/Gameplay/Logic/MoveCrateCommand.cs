@@ -7,7 +7,6 @@ namespace CratePusher.Gameplay.Logic
 {
     public class MoveCrateCommand : ICommand
     {
-        // TODO: fields will get erased now
         private readonly Point initialPoint;
         private readonly Point destinationPoint;
 
@@ -34,20 +33,20 @@ namespace CratePusher.Gameplay.Logic
             }
             CanExecute = level.InBounds(destinationPoint) &&
                          level.Fields[destinationPoint.Y, destinationPoint.X] != FieldType.Wall &&
-                         level.Fields[destinationPoint.Y, destinationPoint.X] != FieldType.Stone;
+                         !level.Crates[destinationPoint.Y, destinationPoint.X];
         }
 
         public ICollection<ICommand> Execute(Level level)
         {
-            level.Fields[initialPoint.Y, initialPoint.X] = FieldType.Nothing;
-            level.Fields[destinationPoint.Y, destinationPoint.X] = FieldType.Stone;
+            level.Crates[initialPoint.Y, initialPoint.X] = false;
+            level.Crates[destinationPoint.Y, destinationPoint.X] = true;
             return new ICommand[0];
         }
 
         public void Rollback(Level level)
         {
-            level.Fields[initialPoint.Y, initialPoint.X] = FieldType.Stone;
-            level.Fields[destinationPoint.Y, destinationPoint.X] = FieldType.Nothing;
+            level.Crates[initialPoint.Y, initialPoint.X] = true;
+            level.Crates[destinationPoint.Y, destinationPoint.X] = false;
         }
     }
 }

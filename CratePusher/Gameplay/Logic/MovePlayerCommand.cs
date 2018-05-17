@@ -40,7 +40,7 @@ namespace CratePusher.Gameplay.Logic
         {
             level.PlayerPosition = destinationPoint;
             var commands = new List<ICommand>();
-            if (level.Fields[destinationPoint.Y, destinationPoint.X] == FieldType.Stone)
+            if (level.Crates[destinationPoint.Y, destinationPoint.X])
             {
                 commands.Add(new MoveCrateCommand(level, inputAction, destinationPoint));
             }

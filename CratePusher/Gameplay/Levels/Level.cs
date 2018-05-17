@@ -8,8 +8,9 @@ namespace CratePusher.Gameplay.Levels
 {
     public class Level
     {
-        public FieldType[,] Fields { get; }
         public bool[,] PaintFloor { get; }
+        public FieldType[,] Fields { get; }
+        public bool[,] Crates { get; }
         public Point PlayerPosition { get; set; }
         public int Width => Fields.GetLength(1);
         public int Height => Fields.GetLength(0);
@@ -20,6 +21,7 @@ namespace CratePusher.Gameplay.Levels
             var width = rows.Select(r => r.Length).Max();
             Fields = new FieldType[height, width];
             PaintFloor = new bool[height, width];
+            Crates = new bool[height, width];
             Point? initialPosition = null;
             for (int y = 0; y < height; ++y)
             {
@@ -33,7 +35,7 @@ namespace CratePusher.Gameplay.Levels
                             PaintFloor[y, x] = true;
                             break;
                         case '$':
-                            Fields[y, x] = FieldType.Stone;
+                            Crates[y, x] = true;
                             break;
                         case '.':
                             Fields[y, x] = FieldType.Slot;

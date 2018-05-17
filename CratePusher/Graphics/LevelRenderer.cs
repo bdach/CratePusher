@@ -54,14 +54,15 @@ namespace CratePusher.Graphics
                         case FieldType.Slot:
                             tileSheet.DrawTile(spriteBatch, TileType.TargetField, location, targetTileSize);
                             break;
-                        case FieldType.Stone:
-                            tileSheet.DrawTile(spriteBatch, TileType.YellowCrate, location, targetTileSize);
-                            break;
                         case FieldType.Wall:
                             tileSheet.DrawTile(spriteBatch, TileType.RedWall, location, targetTileSize);
                             break;
                     }
 
+                    if (level.Crates[y, x])
+                    {
+                        tileSheet.DrawTile(spriteBatch, TileType.YellowCrate, location, targetTileSize);
+                    }
                 }
             }
             var playerLocation = level.PlayerPosition;
