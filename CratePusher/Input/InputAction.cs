@@ -7,6 +7,7 @@
         MoveRight,
         MoveUp,
         MoveDown,
-        Undo
+        Undo,
+        ResetLevel
     }
 }

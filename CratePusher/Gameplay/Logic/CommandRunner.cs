@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CratePusher.Gameplay.Levels;
 using CratePusher.Input;
@@ -7,11 +8,11 @@ namespace CratePusher.Gameplay.Logic
 {
     public class CommandRunner
     {
-        private Stack<List<ICommand>> CommandHistory;
+        private readonly Stack<List<ICommand>> commandHistory;
 
         public CommandRunner()
         {
-            CommandHistory = new Stack<List<ICommand>>();
+            commandHistory = new Stack<List<ICommand>>();
         }
 
         public void RunCommandsForAction(InputAction inputAction, Level level)
@@ -19,6 +20,9 @@ namespace CratePusher.Gameplay.Logic
             var commands = new List<ICommand>();
             switch (inputAction)
             {
+                case InputAction.ResetLevel:
+                    ResetLevel(level);
+                    return;
                 case InputAction.Undo:
                     UndoLastCommand(level);
                     return;
@@ -32,21 +36,11 @@ namespace CratePusher.Gameplay.Logic
             var executedCommands = RunCommandChain(commands, level);
             if (executedCommands?.Count > 0)
             {
-                CommandHistory.Push(executedCommands);
+                commandHistory.Push(executedCommands);
             }
         }
 
-        private void UndoLastCommand(Level level)
-        {
-            if (CommandHistory.Count == 0) return;
-            var lastAction = CommandHistory.Pop();
-            foreach (var command in lastAction)
-            {
-                command.Rollback(level);
-            }
-        }
-
-        private List<ICommand> RunCommandChain(List<ICommand> commands, Level level)
+        private static List<ICommand> RunCommandChain(List<ICommand> commands, Level level)
         {
             if (commands.Any(command => !command.CanExecute))
             {
@@ -72,9 +66,31 @@ namespace CratePusher.Gameplay.Logic
             return null;
         }
 
+        private void ResetLevel(Level level)
+        {
+            foreach (var action in commandHistory)
+            {
+                foreach (var command in action)
+                {
+                    command.Rollback(level);
+                }
+            }
+            ClearHistory();
+        }
+
+        private void UndoLastCommand(Level level)
+        {
+            if (commandHistory.Count == 0) return;
+            var lastAction = commandHistory.Pop();
+            foreach (var command in lastAction)
+            {
+                command.Rollback(level);
+            }
+        }
+
         public void ClearHistory()
         {
-            CommandHistory.Clear();
+            commandHistory.Clear();
         }
     }
 }
