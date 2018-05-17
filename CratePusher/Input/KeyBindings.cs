@@ -11,7 +11,8 @@ namespace CratePusher.Input
             {Keys.Left,  InputAction.MoveLeft},
             {Keys.Right, InputAction.MoveRight},
             {Keys.Down,  InputAction.MoveDown},
-            {Keys.Up,    InputAction.MoveUp}
+            {Keys.Up,    InputAction.MoveUp},
+            {Keys.U,     InputAction.Undo}
         };
 
         public static InputAction GetBinding(Keys key)

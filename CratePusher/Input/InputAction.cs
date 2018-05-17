@@ -6,6 +6,7 @@
         MoveLeft,
         MoveRight,
         MoveUp,
-        MoveDown
+        MoveDown,
+        Undo
     }
 }

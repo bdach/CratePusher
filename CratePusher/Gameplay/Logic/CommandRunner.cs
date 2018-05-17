@@ -7,11 +7,21 @@ namespace CratePusher.Gameplay.Logic
 {
     public class CommandRunner
     {
+        private Stack<List<ICommand>> CommandHistory;
+
+        public CommandRunner()
+        {
+            CommandHistory = new Stack<List<ICommand>>();
+        }
+
         public void RunCommandsForAction(InputAction inputAction, Level level)
         {
-            ICollection<ICommand> commands = new List<ICommand>();
+            var commands = new List<ICommand>();
             switch (inputAction)
             {
+                case InputAction.Undo:
+                    UndoLastCommand(level);
+                    return;
                 case InputAction.MoveLeft:
                 case InputAction.MoveRight:
                 case InputAction.MoveUp:
@@ -19,26 +29,52 @@ namespace CratePusher.Gameplay.Logic
                     commands.Add(new MovePlayerCommand(level, inputAction));
                     break;
             }
-            RunCommandChain(commands, level);
+            var executedCommands = RunCommandChain(commands, level);
+            if (executedCommands?.Count > 0)
+            {
+                CommandHistory.Push(executedCommands);
+            }
         }
 
-        private bool RunCommandChain(ICollection<ICommand> commands, Level level)
+        private void UndoLastCommand(Level level)
+        {
+            if (CommandHistory.Count == 0) return;
+            var lastAction = CommandHistory.Pop();
+            foreach (var command in lastAction)
+            {
+                command.Rollback(level);
+            }
+        }
+
+        private List<ICommand> RunCommandChain(List<ICommand> commands, Level level)
         {
             if (commands.Any(command => !command.CanExecute))
             {
-                return false;
+                return null;
             }
+
             var nextInChain = commands.SelectMany(command => command.Execute(level)).ToList();
-            if (nextInChain.Count == 0 || RunCommandChain(nextInChain, level))
+            if (nextInChain.Count == 0)
             {
-                return true;
+                return commands;
+            }
+
+            var executedChain = RunCommandChain(nextInChain, level);
+            if (executedChain != null)
+            {
+                commands.AddRange(executedChain);
+                return commands;
             }
             foreach (var command in commands)
             {
                 command.Rollback(level);
             }
+            return null;
+        }
 
-            return false;
+        public void ClearHistory()
+        {
+            CommandHistory.Clear();
         }
     }
 }

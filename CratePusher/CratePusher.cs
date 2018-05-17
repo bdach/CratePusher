@@ -83,7 +83,10 @@ namespace CratePusher
 
             var action = stateManager.Advance(gameTime.ElapsedGameTime);
             commandRunner.RunCommandsForAction(action, levelCollection.CurrentLevel);
-            levelCollection.CheckLevel();
+            if (levelCollection.LevelChanged())
+            {
+                commandRunner.ClearHistory();
+            }
             
             base.Update(gameTime);
         }

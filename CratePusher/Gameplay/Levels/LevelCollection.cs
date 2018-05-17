@@ -14,12 +14,14 @@ namespace CratePusher.Gameplay.Levels
             levelNumber = 0;
         }
 
-        public void CheckLevel()
+        public bool LevelChanged()
         {
-            if (CurrentLevel.LevelDone() && levelNumber < Levels.Count)
+            if (!CurrentLevel.LevelDone() || levelNumber >= Levels.Count)
             {
-                levelNumber += 1;
+                return false;
             }
+            levelNumber += 1;
+            return true;
         }
     }
 }
