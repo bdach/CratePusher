@@ -13,13 +13,14 @@ namespace CratePusher
     /// </summary>
     public class CratePusher : Game
     {
-        private GraphicsDeviceManager graphics;
+
+        private readonly StateManager stateManager;
+        private readonly CommandRunner commandRunner;
+        private readonly GraphicsDeviceManager graphics;
+
         private SpriteBatch spriteBatch;
         private LevelRenderer levelRenderer;
         private LevelCollection levelCollection;
-        private StateManager stateManager;
-        private CommandRunner commandRunner;
-        private int levelNumber = 0;
 
         public CratePusher()
         {
@@ -81,7 +82,8 @@ namespace CratePusher
                 Exit();
 
             var action = stateManager.Advance(gameTime.ElapsedGameTime);
-            commandRunner.RunCommandsForAction(action, levelCollection.Levels[levelNumber]);
+            commandRunner.RunCommandsForAction(action, levelCollection.CurrentLevel);
+            levelCollection.CheckLevel();
             
             base.Update(gameTime);
         }
@@ -94,7 +96,7 @@ namespace CratePusher
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            levelRenderer.Render(levelCollection.Levels[levelNumber], spriteBatch);
+            levelRenderer.Render(levelCollection.CurrentLevel, spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

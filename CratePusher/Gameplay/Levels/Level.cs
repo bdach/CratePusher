@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CratePusher.Input;
 using Microsoft.Xna.Framework;
 
 namespace CratePusher.Gameplay.Levels
 {
     public class Level
     {
-        public bool[,] PaintFloor { get; }
-        public FieldType[,] Fields { get; }
-        public bool[,] Crates { get; }
+        public bool[,] Floor { get; }
+        public HashSet<Point> Walls { get; }
+        public HashSet<Point> Goals { get; }
+        public HashSet<Point> Crates { get; }
         public Point PlayerPosition { get; set; }
-        public int Width => Fields.GetLength(1);
-        public int Height => Fields.GetLength(0);
+
+        public int Width => Floor.GetLength(1);
+        public int Height => Floor.GetLength(0);
 
         public Level(IList<string> rows)
         {
             var height = rows.Count;
             var width = rows.Select(r => r.Length).Max();
-            Fields = new FieldType[height, width];
-            PaintFloor = new bool[height, width];
-            Crates = new bool[height, width];
+
+            Floor = new bool[height, width];
+            Walls = new HashSet<Point>();
+            Goals = new HashSet<Point>();
+            Crates = new HashSet<Point>();
+
             Point? initialPosition = null;
             for (int y = 0; y < height; ++y)
             {
@@ -31,14 +35,14 @@ namespace CratePusher.Gameplay.Levels
                     switch (line[x])
                     {
                         case '#':
-                            Fields[y, x] = FieldType.Wall;
-                            PaintFloor[y, x] = true;
+                            Walls.Add(new Point(x, y));
+                            Floor[y, x] = true;
                             break;
                         case '$':
-                            Crates[y, x] = true;
+                            Crates.Add(new Point(x, y));
                             break;
                         case '.':
-                            Fields[y, x] = FieldType.Slot;
+                            Goals.Add(new Point(x, y));
                             break;
                         case '@':
                             initialPosition = new Point(x, y);
@@ -73,22 +77,27 @@ namespace CratePusher.Gameplay.Levels
                 var nextPoint = positionStack.Pop();
                 var x = nextPoint.X;
                 var y = nextPoint.Y;
-                if (PaintFloor[y, x])
+                if (Floor[y, x])
                 {
                     continue;
                 }
-                PaintFloor[y, x] = true;
+                Floor[y, x] = true;
                 foreach ((var dx, var dy) in neighbors)
                 {
                     var newX = x + dx;
                     var newY = y + dy;
                     var point = new Point(newX, newY);
-                    if (newX >= 0 && newX < Width && newY >= 0 && newY < Height && !PaintFloor[newY, newX])
+                    if (newX >= 0 && newX < Width && newY >= 0 && newY < Height && !Floor[newY, newX])
                     {
                         positionStack.Push(point);
                     }
                 }
             }
+        }
+
+        public bool LevelDone()
+        {
+            return Goals.SetEquals(Crates);
         }
     }
 }

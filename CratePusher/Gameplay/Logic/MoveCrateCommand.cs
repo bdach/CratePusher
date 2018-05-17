@@ -32,21 +32,21 @@ namespace CratePusher.Gameplay.Logic
                     break;
             }
             CanExecute = level.InBounds(destinationPoint) &&
-                         level.Fields[destinationPoint.Y, destinationPoint.X] != FieldType.Wall &&
-                         !level.Crates[destinationPoint.Y, destinationPoint.X];
+                         !level.Walls.Contains(destinationPoint) &&
+                         !level.Crates.Contains(destinationPoint);
         }
 
         public ICollection<ICommand> Execute(Level level)
         {
-            level.Crates[initialPoint.Y, initialPoint.X] = false;
-            level.Crates[destinationPoint.Y, destinationPoint.X] = true;
+            level.Crates.Remove(initialPoint);
+            level.Crates.Add(destinationPoint);
             return new ICommand[0];
         }
 
         public void Rollback(Level level)
         {
-            level.Crates[initialPoint.Y, initialPoint.X] = true;
-            level.Crates[destinationPoint.Y, destinationPoint.X] = false;
+            level.Crates.Remove(destinationPoint);
+            level.Crates.Add(initialPoint);
         }
     }
 }

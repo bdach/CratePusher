@@ -34,13 +34,13 @@ namespace CratePusher.Gameplay.Logic
                     break;
             }
             CanExecute = level.InBounds(destinationPoint) &&
-                         level.Fields[destinationPoint.Y, destinationPoint.X] != FieldType.Wall;
+                         !level.Walls.Contains(destinationPoint);
         }
         public ICollection<ICommand> Execute(Level level)
         {
             level.PlayerPosition = destinationPoint;
             var commands = new List<ICommand>();
-            if (level.Crates[destinationPoint.Y, destinationPoint.X])
+            if (level.Crates.Contains(destinationPoint))
             {
                 commands.Add(new MoveCrateCommand(level, inputAction, destinationPoint));
             }

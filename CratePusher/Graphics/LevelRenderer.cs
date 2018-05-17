@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CratePusher.Gameplay.Levels;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -39,37 +40,42 @@ namespace CratePusher.Graphics
 
         private void DrawLevelGrid(Level level, SpriteBatch spriteBatch, Point offset, int targetTileSize)
         {
+            DrawFloor(level, spriteBatch, offset, targetTileSize);
+            DrawLayer(level.Walls, spriteBatch, offset, targetTileSize, TileType.RedWall);
+            DrawLayer(level.Goals, spriteBatch, offset, targetTileSize, TileType.TargetField);
+            DrawLayer(level.Crates, spriteBatch, offset, targetTileSize, TileType.YellowCrate);
+
+            var playerLocation = TileToScreen(level.PlayerPosition, targetTileSize, offset);
+            tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
+        }
+
+        private void DrawLayer(HashSet<Point> points, SpriteBatch spriteBatch, Point offset, int targetTileSize, TileType tileType)
+        {
+            foreach (var point in points)
+            {
+                var targetPoint = TileToScreen(point, targetTileSize, offset);
+                tileSheet.DrawTile(spriteBatch, tileType, targetPoint, targetTileSize);
+            }
+        }
+
+        private void DrawFloor(Level level, SpriteBatch spriteBatch, Point offset, int targetTileSize)
+        {
             for (int y = 0; y < level.Height; ++y)
             {
                 for (int x = 0; x < level.Width; ++x)
                 {
                     var location = new Point(x * targetTileSize, y * targetTileSize) + offset;
-                    if (level.PaintFloor[y, x])
+                    if (level.Floor[y, x])
                     {
                         tileSheet.DrawTile(spriteBatch, TileType.GrayFloor, location, targetTileSize);
                     }
-
-                    switch (level.Fields[y, x])
-                    {
-                        case FieldType.Slot:
-                            tileSheet.DrawTile(spriteBatch, TileType.TargetField, location, targetTileSize);
-                            break;
-                        case FieldType.Wall:
-                            tileSheet.DrawTile(spriteBatch, TileType.RedWall, location, targetTileSize);
-                            break;
-                    }
-
-                    if (level.Crates[y, x])
-                    {
-                        tileSheet.DrawTile(spriteBatch, TileType.YellowCrate, location, targetTileSize);
-                    }
                 }
             }
-            var playerLocation = level.PlayerPosition;
-            playerLocation.X *= targetTileSize;
-            playerLocation.Y *= targetTileSize;
-            playerLocation += offset;
-            tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
+        }
+
+        private static Point TileToScreen(Point position, int targetTileSize, Point offset)
+        {
+            return new Point(position.X * targetTileSize, position.Y * targetTileSize) + offset;
         }
 
         private int GetTileSize(int fullScaleWidth, int fullScaleHeight)
