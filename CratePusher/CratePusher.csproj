@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CratePusher.cs" />
+    <Compile Include="Direction.cs" />
     <Compile Include="Gameplay\Levels\LevelImporter.cs" />
     <Compile Include="Gameplay\Levels\Level.cs" />
     <Compile Include="Gameplay\Levels\LevelCollection.cs" />

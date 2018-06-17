@@ -12,6 +12,7 @@ namespace CratePusher.Gameplay.Levels
         public HashSet<Point> Goals { get; }
         public HashSet<Point> Crates { get; }
         public Point PlayerPosition { get; set; }
+        public Direction PlayerDirection { get; set; }
 
         public int Width => Floor.GetLength(1);
         public int Height => Floor.GetLength(0);
@@ -25,6 +26,7 @@ namespace CratePusher.Gameplay.Levels
             Walls = new HashSet<Point>();
             Goals = new HashSet<Point>();
             Crates = new HashSet<Point>();
+            PlayerDirection = Direction.Down;
 
             Point? initialPosition = null;
             for (int y = 0; y < height; ++y)

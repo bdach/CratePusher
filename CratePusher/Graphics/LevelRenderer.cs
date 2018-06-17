@@ -45,8 +45,27 @@ namespace CratePusher.Graphics
             DrawLayer(level.Goals, spriteBatch, offset, targetTileSize, TileType.TargetField);
             DrawLayer(level.Crates, spriteBatch, offset, targetTileSize, TileType.YellowCrate);
 
+            DrawPlayer(level, spriteBatch, offset, targetTileSize);
+        }
+
+        private void DrawPlayer(Level level, SpriteBatch spriteBatch, Point offset, int targetTileSize)
+        {
             var playerLocation = TileToScreen(level.PlayerPosition, targetTileSize, offset);
-            tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
+            switch (level.PlayerDirection)
+            {
+                case Direction.Left:
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingLeft, playerLocation, targetTileSize);
+                    break;
+                case Direction.Right:
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingRight, playerLocation, targetTileSize);
+                    break;
+                case Direction.Up:
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingUp, playerLocation, targetTileSize);
+                    break;
+                case Direction.Down:
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
+                    break;
+            }
         }
 
         private void DrawLayer(HashSet<Point> points, SpriteBatch spriteBatch, Point offset, int targetTileSize, TileType tileType)
