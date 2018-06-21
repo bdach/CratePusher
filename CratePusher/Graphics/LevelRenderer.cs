@@ -54,16 +54,16 @@ namespace CratePusher.Graphics
             switch (level.PlayerDirection)
             {
                 case Direction.Left:
-                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingLeft, playerLocation, targetTileSize);
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerLeft, playerLocation, targetTileSize);
                     break;
                 case Direction.Right:
-                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingRight, playerLocation, targetTileSize);
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerRight, playerLocation, targetTileSize);
                     break;
                 case Direction.Up:
-                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingUp, playerLocation, targetTileSize);
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerUp, playerLocation, targetTileSize);
                     break;
                 case Direction.Down:
-                    tileSheet.DrawTile(spriteBatch, TileType.PlayerFacingDown, playerLocation, targetTileSize);
+                    tileSheet.DrawTile(spriteBatch, TileType.PlayerDown, playerLocation, targetTileSize);
                     break;
             }
         }
