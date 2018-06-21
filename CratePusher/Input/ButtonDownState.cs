@@ -5,7 +5,7 @@ namespace CratePusher.Input
 {
     public class ButtonDownState : IState
     {
-        private static readonly TimeSpan RepeatInterval = TimeSpan.FromMilliseconds(300);
+        private static readonly TimeSpan RepeatInterval = CratePusher.AnimationDuration;
 
         private readonly Keys keyPressed;
         private TimeSpan lastRepeat;

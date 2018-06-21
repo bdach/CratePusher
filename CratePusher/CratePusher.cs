@@ -1,4 +1,5 @@
-﻿using CratePusher.Gameplay.Levels;
+﻿using System;
+using CratePusher.Gameplay.Levels;
 using CratePusher.Gameplay.Logic;
 using CratePusher.Graphics;
 using CratePusher.Input;
@@ -13,6 +14,7 @@ namespace CratePusher
     /// </summary>
     public class CratePusher : Game
     {
+        public static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(200);
 
         private readonly StateManager stateManager;
         private readonly CommandRunner commandRunner;
@@ -38,8 +40,10 @@ namespace CratePusher
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+//            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+//            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
 
             base.Initialize();
@@ -82,7 +86,8 @@ namespace CratePusher
                 Exit();
 
             var action = stateManager.Advance(gameTime.ElapsedGameTime);
-            commandRunner.RunCommandsForAction(action, levelCollection.CurrentLevel);
+            commandRunner.BeginAction(action, levelCollection.CurrentLevel);
+            commandRunner.AdvanceAction(levelCollection.CurrentLevel, gameTime.ElapsedGameTime);
             if (levelCollection.LevelChanged())
             {
                 commandRunner.ClearHistory();

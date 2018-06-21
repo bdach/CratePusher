@@ -9,13 +9,14 @@ namespace CratePusher.Gameplay.Logic
     public class CommandRunner
     {
         private readonly Stack<List<ICommand>> commandHistory;
+        private List<ICommand> currentCommands = null;
 
         public CommandRunner()
         {
             commandHistory = new Stack<List<ICommand>>();
         }
 
-        public void RunCommandsForAction(InputAction inputAction, Level level)
+        public void BeginAction(InputAction inputAction, Level level)
         {
             var commands = new List<ICommand>();
             switch (inputAction)
@@ -32,36 +33,49 @@ namespace CratePusher.Gameplay.Logic
                 case InputAction.MoveDown:
                     commands.Add(new MovePlayerCommand(level, inputAction));
                     break;
+                case InputAction.None:
+                    return;
             }
-            var executedCommands = RunCommandChain(commands, level);
-            if (executedCommands?.Count > 0)
+            currentCommands = GetCommandChain(commands, level);
+        }
+
+        public void AdvanceAction(Level level, TimeSpan elapsedTime)
+        {
+            if (currentCommands == null) return;
+            if (currentCommands.All(command => command.Done))
             {
-                commandHistory.Push(executedCommands);
+                foreach (var command in currentCommands)
+                {
+                    command.Finish(level);
+                }
+                commandHistory.Push(currentCommands);
+                currentCommands = null;
+                return;
+            }
+            foreach (var command in currentCommands)
+            {
+                command.Advance(level, elapsedTime);
             }
         }
 
-        private static List<ICommand> RunCommandChain(List<ICommand> commands, Level level)
+        private static List<ICommand> GetCommandChain(List<ICommand> commands, Level level)
         {
             if (commands.Any(command => !command.CanExecute))
             {
                 return null;
             }
 
-            var nextInChain = commands.SelectMany(command => command.Execute(level)).ToList();
+            var nextInChain = commands.SelectMany(command => command.GetRamifications(level)).ToList();
             if (nextInChain.Count == 0)
             {
                 return commands;
             }
 
-            var executedChain = RunCommandChain(nextInChain, level);
+            var executedChain = GetCommandChain(nextInChain, level);
             if (executedChain != null)
             {
                 commands.AddRange(executedChain);
                 return commands;
-            }
-            foreach (var command in commands)
-            {
-                command.Rollback(level);
             }
             return null;
         }

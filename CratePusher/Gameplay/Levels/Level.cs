@@ -13,6 +13,7 @@ namespace CratePusher.Gameplay.Levels
         public HashSet<Vector2> Crates { get; }
         public Vector2 PlayerPosition { get; set; }
         public Direction PlayerDirection { get; set; }
+        public int PlayerFrameCycle { get; set; }
 
         public int Width => Floor.GetLength(1);
         public int Height => Floor.GetLength(0);
