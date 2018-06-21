@@ -8,10 +8,10 @@ namespace CratePusher.Gameplay.Levels
     public class Level
     {
         public bool[,] Floor { get; }
-        public HashSet<Point> Walls { get; }
-        public HashSet<Point> Goals { get; }
-        public HashSet<Point> Crates { get; }
-        public Point PlayerPosition { get; set; }
+        public HashSet<Vector2> Walls { get; }
+        public HashSet<Vector2> Goals { get; }
+        public HashSet<Vector2> Crates { get; }
+        public Vector2 PlayerPosition { get; set; }
         public Direction PlayerDirection { get; set; }
 
         public int Width => Floor.GetLength(1);
@@ -23,9 +23,9 @@ namespace CratePusher.Gameplay.Levels
             var width = rows.Select(r => r.Length).Max();
 
             Floor = new bool[height, width];
-            Walls = new HashSet<Point>();
-            Goals = new HashSet<Point>();
-            Crates = new HashSet<Point>();
+            Walls = new HashSet<Vector2>();
+            Goals = new HashSet<Vector2>();
+            Crates = new HashSet<Vector2>();
             PlayerDirection = Direction.Down;
 
             Point? initialPosition = null;
@@ -37,14 +37,14 @@ namespace CratePusher.Gameplay.Levels
                     switch (line[x])
                     {
                         case '#':
-                            Walls.Add(new Point(x, y));
+                            Walls.Add(new Vector2(x, y));
                             Floor[y, x] = true;
                             break;
                         case '$':
-                            Crates.Add(new Point(x, y));
+                            Crates.Add(new Vector2(x, y));
                             break;
                         case '.':
-                            Goals.Add(new Point(x, y));
+                            Goals.Add(new Vector2(x, y));
                             break;
                         case '@':
                             initialPosition = new Point(x, y);
@@ -56,11 +56,11 @@ namespace CratePusher.Gameplay.Levels
             {
                 throw new ArgumentException("No player in level");
             }
-            PlayerPosition = initialPosition.Value;
+            PlayerPosition = new Vector2(initialPosition.Value.X, initialPosition.Value.Y);
             FloodFillFloor(initialPosition.Value);
         }
 
-        public bool InBounds(Point point)
+        public bool InBounds(Vector2 point)
         {
             return point.X >= 0 && point.X < Width &&
                    point.Y >= 0 && point.Y < Height;

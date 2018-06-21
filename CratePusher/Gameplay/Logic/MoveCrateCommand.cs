@@ -7,12 +7,12 @@ namespace CratePusher.Gameplay.Logic
 {
     public class MoveCrateCommand : ICommand
     {
-        private readonly Point initialPoint;
-        private readonly Point destinationPoint;
+        private readonly Vector2 initialPoint;
+        private readonly Vector2 destinationPoint;
 
         public bool CanExecute { get; }
 
-        internal MoveCrateCommand(Level level, InputAction inputAction, Point initialPoint)
+        internal MoveCrateCommand(Level level, InputAction inputAction, Vector2 initialPoint)
         {
             this.initialPoint = initialPoint;
             this.destinationPoint = initialPoint;

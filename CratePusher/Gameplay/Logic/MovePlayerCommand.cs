@@ -7,8 +7,8 @@ namespace CratePusher.Gameplay.Logic
 {
     public class MovePlayerCommand : ICommand
     {
-        private readonly Point initialPoint;
-        private readonly Point destinationPoint;
+        private readonly Vector2 initialPoint;
+        private readonly Vector2 destinationPoint;
         private readonly Direction initialDirection;
         private readonly Direction finalDirection;
         private readonly InputAction inputAction;

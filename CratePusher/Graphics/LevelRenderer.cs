@@ -68,7 +68,7 @@ namespace CratePusher.Graphics
             }
         }
 
-        private void DrawLayer(HashSet<Point> points, SpriteBatch spriteBatch, Point offset, int targetTileSize, TileType tileType)
+        private void DrawLayer(HashSet<Vector2> points, SpriteBatch spriteBatch, Point offset, int targetTileSize, TileType tileType)
         {
             foreach (var point in points)
             {
@@ -92,9 +92,9 @@ namespace CratePusher.Graphics
             }
         }
 
-        private static Point TileToScreen(Point position, int targetTileSize, Point offset)
+        private static Point TileToScreen(Vector2 position, int targetTileSize, Point offset)
         {
-            return new Point(position.X * targetTileSize, position.Y * targetTileSize) + offset;
+            return new Point((int) (position.X * targetTileSize), (int) (position.Y * targetTileSize)) + offset;
         }
 
         private int GetTileSize(int fullScaleWidth, int fullScaleHeight)
