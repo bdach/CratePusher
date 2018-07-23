@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CratePusher.Gameplay.Levels;
+using CratePusher.Graphics;
 using CratePusher.Input;
 using Microsoft.Xna.Framework;
 
@@ -68,9 +69,10 @@ namespace CratePusher.Gameplay.Logic
             }
 
             float t = (float) (elapsedAnimation.TotalMilliseconds / AnimationDuration.TotalMilliseconds);
-            level.PlayerPosition = (1 - t) * initialPoint + t * destinationPoint;
-            level.PlayerFrameCycle = (int) (elapsedAnimation.TotalMilliseconds / 150) % 2 + 1;
+            level.PlayerFrameCycle = (int)(t * 3) % 2;
             level.PlayerDirection = finalDirection;
+            float tt = AnimationCurves.Movement(t);
+            level.PlayerPosition = (1 - tt) * initialPoint + tt * destinationPoint;
         }
 
         public void Finish(Level level)

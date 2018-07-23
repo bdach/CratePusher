@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CratePusher.Gameplay.Levels;
+using CratePusher.Graphics;
 using CratePusher.Input;
 using Microsoft.Xna.Framework;
 
@@ -55,8 +56,9 @@ namespace CratePusher.Gameplay.Logic
             }
 
             float t = (float) (elapsedAnimation.TotalMilliseconds / AnimationDuration.TotalMilliseconds);
+            float tt = AnimationCurves.Movement(t);
             level.Crates.Remove(intermediatePoint);
-            intermediatePoint = (1 - t) * initialPoint + t * destinationPoint;
+            intermediatePoint = (1 - tt) * initialPoint + tt * destinationPoint;
             level.Crates.Add(intermediatePoint);
         }
 

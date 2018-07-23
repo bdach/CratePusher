@@ -37,8 +37,9 @@ namespace CratePusher.Gameplay
 
         public void DrawScene(SpriteBatch spriteBatch)
         {
-            var transitionPoint = 1 - Math.Abs(totalTime.TotalMilliseconds / TransitionTime.TotalMilliseconds - 1);
-            levelRenderer.Render(levelCollection.CurrentLevel, spriteBatch, transitionPoint);
+            float t = (float) (totalTime.TotalMilliseconds / (2 * TransitionTime.TotalMilliseconds));
+            float tt = AnimationCurves.Fade(t);
+            levelRenderer.Render(levelCollection.CurrentLevel, spriteBatch, tt);
         }
     }
 }

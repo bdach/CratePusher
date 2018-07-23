@@ -55,6 +55,7 @@
     <Compile Include="Gameplay\Logic\MoveCrateCommand.cs" />
     <Compile Include="Gameplay\Logic\MovePlayerCommand.cs" />
     <Compile Include="Gameplay\SceneStateManager.cs" />
+    <Compile Include="Graphics\AnimationCurves.cs" />
     <Compile Include="Graphics\LevelRenderer.cs" />
     <Compile Include="Graphics\TileSheet.cs" />
     <Compile Include="Graphics\TileType.cs" />
