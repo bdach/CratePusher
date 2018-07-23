@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CratePusher.Input
 {
-    public class ButtonDownState : IState
+    public class ButtonDownState : IInputState
     {
         private static readonly TimeSpan RepeatInterval = CratePusher.AnimationDuration;
 
@@ -16,7 +16,7 @@ namespace CratePusher.Input
             this.lastRepeat = RepeatInterval; // to trigger the first movement immediately
         }
 
-        public IState Advance(TimeSpan elapsedTime)
+        public IInputState Advance(TimeSpan elapsedTime)
         {
             var keysPressed = KeyBindings.GetPressedKeys();
             if (!keysPressed.Contains(keyPressed))

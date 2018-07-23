@@ -1,8 +1,7 @@
 ﻿using System;
+using CratePusher.Gameplay;
 using CratePusher.Gameplay.Levels;
-using CratePusher.Gameplay.Logic;
 using CratePusher.Graphics;
-using CratePusher.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,19 +15,16 @@ namespace CratePusher
     {
         public static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(200);
 
-        private readonly StateManager stateManager;
-        private readonly CommandRunner commandRunner;
         private readonly GraphicsDeviceManager graphics;
 
         private SpriteBatch spriteBatch;
         private LevelRenderer levelRenderer;
         private LevelCollection levelCollection;
+        private SceneStateManager sceneStateManager;
 
         public CratePusher()
         {
             graphics = new GraphicsDeviceManager(this);
-            stateManager = new StateManager();;
-            commandRunner = new CommandRunner();
             Content.RootDirectory = "Content";
         }
 
@@ -65,6 +61,7 @@ namespace CratePusher
             {
                 levelCollection = importer.LoadLevels();
             }
+            sceneStateManager = new SceneStateManager(levelCollection, levelRenderer);
         }
 
         /// <summary>
@@ -84,15 +81,7 @@ namespace CratePusher
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            var action = stateManager.Advance(gameTime.ElapsedGameTime);
-            commandRunner.BeginAction(action, levelCollection.CurrentLevel);
-            commandRunner.AdvanceAction(levelCollection.CurrentLevel, gameTime.ElapsedGameTime);
-            if (levelCollection.LevelChanged())
-            {
-                commandRunner.ClearHistory();
-            }
-            
+            sceneStateManager.Advance(gameTime.ElapsedGameTime);
             base.Update(gameTime);
         }
 
@@ -104,7 +93,7 @@ namespace CratePusher
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            levelRenderer.Render(levelCollection.CurrentLevel, spriteBatch);
+            sceneStateManager.DrawScene(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

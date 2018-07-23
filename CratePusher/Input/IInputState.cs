@@ -2,9 +2,9 @@
 
 namespace CratePusher.Input
 {
-    public interface IState
+    public interface IInputState
     {
-        IState Advance(TimeSpan elapsedTime);
+        IInputState Advance(TimeSpan elapsedTime);
         InputAction GetInputAction();
     }
 }

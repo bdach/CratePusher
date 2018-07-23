@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace CratePusher.Input
 {
-    public class IdleState : IState
+    public class IdleState : IInputState
     {
-        public IState Advance(TimeSpan elapsedTime)
+        public IInputState Advance(TimeSpan elapsedTime)
         {
             var keysPressed = KeyBindings.GetPressedKeys();
             switch (keysPressed.Count)

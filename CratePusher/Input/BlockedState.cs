@@ -2,9 +2,9 @@
 
 namespace CratePusher.Input
 {
-    public class BlockedState : IState
+    public class BlockedState : IInputState
     {
-        public IState Advance(TimeSpan elapsedTime)
+        public IInputState Advance(TimeSpan elapsedTime)
         {
             var keysPressed = KeyBindings.GetPressedKeys();
             if (keysPressed.Count > 0)

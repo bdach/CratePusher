@@ -39,9 +39,9 @@ namespace CratePusher.Gameplay.Logic
             currentCommands = GetCommandChain(commands, level);
         }
 
-        public void AdvanceAction(Level level, TimeSpan elapsedTime)
+        public bool AdvanceAction(Level level, TimeSpan elapsedTime)
         {
-            if (currentCommands == null) return;
+            if (currentCommands == null) return false;
             if (currentCommands.All(command => command.Done))
             {
                 foreach (var command in currentCommands)
@@ -50,12 +50,13 @@ namespace CratePusher.Gameplay.Logic
                 }
                 commandHistory.Push(currentCommands);
                 currentCommands = null;
-                return;
+                return false;
             }
             foreach (var command in currentCommands)
             {
                 command.Advance(level, elapsedTime);
             }
+            return true;
         }
 
         private static List<ICommand> GetCommandChain(List<ICommand> commands, Level level)

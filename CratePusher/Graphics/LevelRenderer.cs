@@ -24,17 +24,30 @@ namespace CratePusher.Graphics
             this.tileSheet = tileSheet;
         }
 
-        public void Render(Level level, SpriteBatch spriteBatch)
+        private void CalculateTileSizeAndOffset(Level level, out int targetTileSize, out Point offset)
         {
             var targetWidth = level.Width * TileSheet.TileSize;
             var targetHeight = level.Height * TileSheet.TileSize;
-            var targetTileSize = GetTileSize(targetWidth, targetHeight);
+            targetTileSize = GetTileSize(targetWidth, targetHeight);
             if (targetTileSize != TileSheet.TileSize)
             {
                 targetWidth = level.Width * targetTileSize;
                 targetHeight = level.Height * targetTileSize;
             }
-            var offset = new Point((screenWidth - targetWidth) / 2, (screenHeight - targetHeight) / 2);
+
+            offset = new Point((screenWidth - targetWidth) / 2, (screenHeight - targetHeight) / 2);
+        }
+
+        public void Render(Level level, SpriteBatch spriteBatch)
+        {
+            CalculateTileSizeAndOffset(level, out var targetTileSize, out var offset);
+            DrawLevelGrid(level, spriteBatch, offset, targetTileSize);
+        }
+
+        public void Render(Level level, SpriteBatch spriteBatch, double transitionPoint)
+        {
+            CalculateTileSizeAndOffset(level, out var targetTileSize, out var offset);
+            offset.Y -= (int) (screenHeight * transitionPoint);
             DrawLevelGrid(level, spriteBatch, offset, targetTileSize);
         }
 
